@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const MapChart = React.lazy(() => import('./components/pages/Map/Map'));
 
-interface Props { }
+interface Props { };
 
 const AppView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => (
   <BrowserRouter>

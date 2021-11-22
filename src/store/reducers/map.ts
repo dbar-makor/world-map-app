@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
-import MapChartView from './Map.view';
-
-import { Country } from '../../../models/country';
-import { reducer } from '../../../store/reducers/map';
-
-interface Props { };
+import * as actions from '../actions/map';
+import { Country } from '../../models/country';
 
 const countriesData: {[key: string]: Country} = { };
 const countries: Country[] = [
@@ -47,12 +41,16 @@ const countries: Country[] = [
   },
 ];
 
-const Map: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
-  const [ selectedCountryState, setSelectedCountryState ] = useState<Country | null>(null);
-  
-  reducer(selectedCountryState, 'Companies');
-  
-  useEffect(() => {
+export interface State {
+  country: Country | null;
+}
+
+const initialState: State = {
+  country: null,
+};
+
+export const reducer = (state: State = initialState, action: actions.CompanyTypes): State => {
+  if (action.type === 'Companies') {
     // Get the total amount of countries
     const countriesWithTotal = countries.map((country) => {
       let { company1, company2, company3 } = country;
@@ -77,27 +75,12 @@ const Map: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
     for (const country of countriesWithTotal) {
       const countryName = country.location;
       countriesData[countryName!] = { ...country, opacity: 100 * country.total / max }
-    }
-  }, []);
+    };
 
-  const getCountryData = (countryName: string): Country => {
-    return countriesData[countryName];
+    console.log(state, action)
+
+    return { ...state, country: countriesData }
   }
 
-  const setCountryData = (countryName: string) =>{
-    setSelectedCountryState(() => countriesData[countryName])
-  };
-
-  return (
-    <MapChartView
-        {...selectedCountryState}
-        getCountryData={getCountryData}
-        setCountryData={setCountryData}
-    >{props.children}</MapChartView>
-  );
+  return { ...state, country: action.payload.country }
 };
-
-Map.displayName = 'Map';
-Map.defaultProps = {};
-
-export default Map;
