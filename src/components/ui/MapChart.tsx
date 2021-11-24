@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useReducer } from 'react';
 import {
   ZoomableGroup,
   ComposableMap,
@@ -8,9 +8,13 @@ import {
 
 import { Country } from '../../models/country';
 
+import { initialState, reducer } from '../../store/reducers/map';
+
 const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
 const MapChart = ({ setTooltipContent, getCountryData }: { setTooltipContent: (countryName: string) => void; getCountryData: (countryName: string) => Country; }) => {
+  const [ selectedCountryState, dispatch ] = useReducer(reducer, initialState);
+
   return (
     <React.Fragment>
       <ComposableMap

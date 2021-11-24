@@ -1,18 +1,23 @@
 import { Country } from '../../models/country';
 
-export const COMPANIES = 'Companies';
-export const COMPANY = 'Company';
+export const CHANGE_SELECTION = 'CHANGE_SELECTION';
+export const SELECT_COUNTRY = 'SELECT_COUNTRY'
+
+export enum SELECTION_TYPES {
+  Total = "total"
+}
 
 // --- Interface --- //
 
-export interface Companies {
-  type: typeof COMPANIES;
-  payload: { country: Country };
+
+export interface CHANGE_SELECTION {
+  type: typeof CHANGE_SELECTION;
+  payload: { selection: "total" | "company1" | "company2" | "company3" };
 }
 
-export interface Company {
-  type: typeof COMPANIES;
-  payload: { country: Country };
+export interface SELECT_COUNTRY {
+  type: typeof SELECT_COUNTRY;
+  payload: { countryName: string };
 }
 
-export type CompanyTypes = Companies | Company;
+export type CompanyTypes = CHANGE_SELECTION | SELECT_COUNTRY;
