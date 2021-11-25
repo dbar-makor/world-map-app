@@ -1,6 +1,7 @@
 import * as actions from '../actions/map';
 import { Country } from '../../models/country';
 
+import produce from 'immer';
 
 const countries: Country[] = [
   {
@@ -41,10 +42,21 @@ const countries: Country[] = [
   },
 ];
 
-const transformData = (countries: Country[], selection = "total" ) => {
+const transformData = (countries: Country[], selection : "total" | "company1" | "company2" | "company3" = "total" ) => {
     // Get the total amount of countries
     const countriesWithTotal = countries.map((country) => {
       let { company1, company2, company3 } = country;
+
+      if (selection === 'company1') {
+        company2 = 0
+        company3 = 0
+      } else if (selection === 'company2') {
+        company1 = 0
+        company3 = 0
+      } else  if (selection === 'company3') {
+        company1 = 0
+        company3 = 0
+      }  
 
       if (typeof company1 === 'undefined') {
         company1 = 0;
@@ -63,6 +75,7 @@ const transformData = (countries: Country[], selection = "total" ) => {
     const max = countriesWithTotal.reduce((acc, country) => acc = acc > country.total ? acc : country.total, 0);
 
     const countriesData: {[key: string]: Country} = { };
+
     // Initialize countries data 
     for (const country of countriesWithTotal) {
       const countryName = country.location;
@@ -82,19 +95,16 @@ export const initialState: State = {
   countryName: "",
 };
 
-export const reducer = (state: State = initialState, action: actions.CompanyTypes): State => {
-  let countryName: string | undefined;
+export const reducer = produce((draft: State = initialState, action: actions.CompanyTypes) => {
 
-  if (action.type === 'SELECT_COUNTRY') { 
-    return {...state, countryName: action.payload.countryName}
+  if (action.type === 'SELECT_COUNTRY') {
+    draft.countryName = action.payload.countryName;
   }
 
   if (action.type === 'CHANGE_SELECTION') {
 
-    transformData(countries)
+    const countriesData = transformData(countries)
 
-    return {...state, countriesData}
+    draft.countriesData = countriesData;
   }
-
-  return { ...state, country: action.payload.country }
-};
+});

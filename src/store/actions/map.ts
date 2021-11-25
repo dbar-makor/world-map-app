@@ -9,7 +9,6 @@ export enum SELECTION_TYPES {
 
 // --- Interface --- //
 
-
 export interface CHANGE_SELECTION {
   type: typeof CHANGE_SELECTION;
   payload: { selection: "total" | "company1" | "company2" | "company3" };

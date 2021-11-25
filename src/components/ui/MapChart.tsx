@@ -6,14 +6,16 @@ import {
   Geography,
 } from "react-simple-maps";
 
+import {SELECT_COUNTRY} from '../../store/actions/map'
+
 import { Country } from '../../models/country';
 
 import { initialState, reducer } from '../../store/reducers/map';
 
 const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
-const MapChart = ({ setTooltipContent, getCountryData }: { setTooltipContent: (countryName: string) => void; getCountryData: (countryName: string) => Country; }) => {
-  const [ selectedCountryState, dispatch ] = useReducer(reducer, initialState);
+const MapChart = () => {
+  const [ countriesState, dispatch ] = useReducer(reducer, initialState);
 
   return (
     <React.Fragment>
@@ -30,16 +32,17 @@ const MapChart = ({ setTooltipContent, getCountryData }: { setTooltipContent: (c
                   geography={geo}
                   onMouseEnter={() => {
                     const countryName = geo.properties.NAME;
-                    setTooltipContent(countryName);
+                    dispatch({type: SELECT_COUNTRY, payload: { countryName }});
                   }}
                   onMouseLeave={() => {
-                    setTooltipContent("");
+                    dispatch({type: SELECT_COUNTRY, payload: {countryName: ""}});
+                    // setTooltipContent("");
                   }}
                   style={{
                     default: {
-                      fill: getCountryData(geo.properties.NAME)?.opacity ? "#34047d" : "#b9b9bd",
+                      fill: countriesState!.countriesData[geo.properties.NAME]?.opacity ? "#34047d" : "#b9b9bd",
                       outline: "none",
-                      opacity: Number(getCountryData(geo.properties.NAME)?.opacity) + '%',
+                      opacity: Number(countriesState!.countriesData[geo.properties.NAME]?.opacity) + '%',
                     },
                     hover: {
                       fill: "#34047d",

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import ReactTooltip from "react-tooltip";
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { reducer, initialState, State } from '../../../store/reducers/map';
 
 import { Country } from '../../../models/country'
 
@@ -15,11 +16,15 @@ interface Props {
   readonly company1?: number;
   readonly company2?: number;
   readonly company3?: number;
-  readonly getCountryData: (countryName: string) => Country;
-  readonly setCountryData: (countryName: string) => void;
+  readonly countriesState?: State;
 };
 
 const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
+
+  const [ countriesState, dispatch ] = useReducer(reducer, initialState);
+
+  // console.log(countriesState?.countryName);
+  console.log(countriesState!.countriesData);
 
   return (
     <div>
@@ -31,7 +36,7 @@ const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
           <Button type="button" className={classes['btnWrapper__company3']}>Company 3</Button>
         </Stack>
       </div>
-      <MapChart getCountryData={props.getCountryData} setTooltipContent={props.setCountryData}/>
+      <MapChart/>
         {props.location && (<ReactTooltip>
           {props.location ? props.location : 'No Data'}
           <br />
