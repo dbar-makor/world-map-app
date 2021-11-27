@@ -1,45 +1,46 @@
-import React, { useReducer } from 'react';
+import React, { useReducer } from "react";
 
-import MapChartView from './Map.view';
+import MapChartView from "./Map.view";
 
-import { Country } from '../../../models/country';
+import { Country } from "../../../models/country";
+import { initialState, mapReducer } from "../../../store/reducers/map";
 
-interface Props { };
+interface Props {}
 
-const countriesData: {[key: string]: Country} = { };
+const countriesData: { [key: string]: Country } = {};
 const countries: Country[] = [
   {
-    location: 'United Kingdom',
+    location: "United Kingdom",
     company1: 10,
     company2: undefined,
     company3: undefined,
   },
   {
-    location: 'France',
+    location: "France",
     company1: 23,
     company2: 12,
     company3: undefined,
   },
-    {
-    location: 'Israel',
+  {
+    location: "Israel",
     company1: 32,
     company2: 53,
     company3: 12,
   },
   {
-    location: 'Russia',
+    location: "Russia",
     company1: undefined,
     company2: 5,
     company3: 34,
   },
   {
-    location: 'Australia',
+    location: "Australia",
     company1: 21,
     company2: 12,
     company3: undefined,
   },
   {
-    location: 'South Africa',
+    location: "South Africa",
     company1: 32,
     company2: 12,
     company3: 32,
@@ -47,13 +48,21 @@ const countries: Country[] = [
 ];
 
 const Map: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
+  const [countriesState] = useReducer(mapReducer, initialState);
+
+  console.log(countriesState?.countryName);
 
   return (
-    <MapChartView>{props.children}</MapChartView>
+    <MapChartView
+      countriesData={countriesState?.countriesData}
+      countryName={countriesState?.countryName}
+    >
+      {props.children}
+    </MapChartView>
   );
 };
 
-Map.displayName = 'Map';
+Map.displayName = "Map";
 Map.defaultProps = {};
 
 export default Map;
