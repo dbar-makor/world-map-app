@@ -1,4 +1,4 @@
-import React, { memo, useContext, useReducer } from "react";
+import React, { memo, useContext } from "react";
 import {
   ZoomableGroup,
   ComposableMap,
@@ -15,11 +15,9 @@ const geoUrl =
 const MapChart = () => {
   const { countriesState, dispatch } = useContext(MapContext);
 
-  console.log(countriesState);
-
   return (
     <React.Fragment>
-      <ComposableMap data-tip="" projectionConfig={{ scale: 180 }}>
+      <ComposableMap data-tip="" projectionConfig={{ scale: 150 }}>
         <ZoomableGroup>
           <Geographies geography={geoUrl}>
             {({ geographies }) =>

@@ -5,4 +5,4 @@ export interface Country {
   company3?: number,
   total?: number,
   opacity?: number,
-}
+};

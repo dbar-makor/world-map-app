@@ -2,7 +2,7 @@
 
 html {
   font-family: system-ui, sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   padding: map-get($sizes, minimal-padding);
 }
   
@@ -25,46 +25,26 @@ svg {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
   .btnWrapper button {
-      font-weight: 600;
+    font-weight: 600;
+    width: 220px;
+    padding: 15px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    border-radius: 10px;
+
+    &:not(:last-child) {
       margin-right: 15px;
-      padding: 15px;
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-      border-radius: 20px;
-
-      &:hover {
-        background-color: #C996CC;
-      }
+    }
   }
 }
-
-.btnWrapper {
-  &__companies {
-    background-color: lightslategray;
-  }
-
-  &__company1 {
-    background-color: red;
-  }
-
-  &__company2 {
-    background-color: blue;
-  }
-
-  &__company3 {
-    background-color: green;
-  }
-}
-
-
 
 .blue {
-  color: blue;
+  color: #5a8eca;
 }
 
-.red {
-  color: red;
+.orange {
+  color: #d17e36;
 }
 
 .green {
-  color: green;
+  color: #81a061;
 }

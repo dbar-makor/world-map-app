@@ -15,11 +15,6 @@ import MapChart from "../../ui/MapChart";
 import classes from "./Map.module.scss";
 
 interface Props {
-  // readonly location?: string;
-  // readonly company1?: number;
-  // readonly company2?: number;
-  // readonly company3?: number;
-  // readonly countriesState?: State;
   readonly countriesData?: { [key: string]: Country };
   readonly countryName?: string;
 }
@@ -40,6 +35,15 @@ const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
       <div className={classes["navWrapper"]}>
         <Stack direction="row" className={classes["btnWrapper"]}>
           <Button
+            sx={{
+                color: '#000',
+                ':hover': {
+                  color: '#fff'
+                }
+            }}
+            style={{
+              backgroundColor: "#773344",
+            }}
             onClick={() =>
               dispatch({
                 type: CHANGE_SELECTION,
@@ -51,10 +55,19 @@ const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
             All Companies
           </Button>
           <Button
+            sx={{
+              color: '#000',
+              ':hover': {
+                color: '#fff'
+              }
+            }}
+            style={{
+              backgroundColor: "#044389",
+            }}
             onClick={() =>
               dispatch({
                 type: CHANGE_SELECTION,
-                payload: { selection: "company2" },
+                payload: { selection: "company1" },
               })
             }
             type="button"
@@ -63,10 +76,19 @@ const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
             Company 1
           </Button>
           <Button
+            sx={{
+              color: '#000',
+              ':hover': {
+                color: '#fff'
+              }
+            }}
+            style={{
+              backgroundColor: "#CC5F00",
+            }}
             onClick={() =>
               dispatch({
                 type: CHANGE_SELECTION,
-                payload: { selection: "company3" },
+                payload: { selection: "company2" },
               })
             }
             type="button"
@@ -75,10 +97,19 @@ const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
             Company 2
           </Button>
           <Button
+            sx={{
+              color: '#000',
+              ':hover': {
+                color: '#fff'
+              }
+            }}
+            style={{
+              backgroundColor: "#566E3D",
+            }}
             onClick={() =>
               dispatch({
                 type: CHANGE_SELECTION,
-                payload: { selection: "company1" },
+                payload: { selection: "company3" },
               })
             }
             type="button"
@@ -91,12 +122,12 @@ const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
       <MapChart />
       {total && (
         <ReactTooltip>
-          {total ? location : "No Data"}
+          {location}
           <br />
           <div className={classes["blue"]}>
             {!company1 ? "" : "Company 1: " + company1}
           </div>
-          <div className={classes["red"]}>
+          <div className={classes["orange"]}>
             {!company2 ? "" : "Company 2: " + company2}
           </div>
           <div className={classes["green"]}>

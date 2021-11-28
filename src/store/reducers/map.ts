@@ -1,65 +1,148 @@
 import * as actions from "../actions/map";
 
-import { Country } from "../../models/country";
-
 import produce from "immer";
 
-const countries: Country[] = [
-  {
-    location: "United Kingdom",
-    company1: 10,
-    company2: undefined,
-    company3: undefined,
-  },
-  {
-    location: "France",
-    company1: 23,
-    company2: 12,
-    company3: undefined,
-  },
-  {
-    location: "Israel",
-    company1: 32,
-    company2: 53,
-    company3: 12,
-  },
-  {
-    location: "Russia",
-    company1: undefined,
-    company2: 5,
-    company3: 34,
-  },
-  {
-    location: "Australia",
-    company1: 21,
-    company2: 12,
-    company3: undefined,
-  },
-  {
-    location: "South Africa",
-    company1: 32,
-    company2: 12,
-    company3: 32,
-  },
-];
+import { backendAPIAxios } from "../../utils/http";
+import { AxiosError, AxiosResponse } from "axios";
+
+import { Country } from "../../models/country";
+
+import { IGetCountriesDataResponse } from "../../models/response";
+
+// const countries: Country[] = [
+//   {
+//     location: "United Kingdom",
+//     company1: 10,
+//     company2: undefined,
+//     company3: undefined,
+//   },
+//   {
+//     location: "Japan",
+//     company1: 10,
+//     company2: 34,
+//     company3: undefined,
+//   },
+//   {
+//     location: "Indonesia",
+//     company1: 10,
+//     company2: undefined,
+//     company3: 65,
+//   },
+//   {
+//     location: "Papua New Guinea",
+//     company1: 10,
+//     company2: 12,
+//     company3: undefined,
+//   },
+//   {
+//     location: "Chad",
+//     company1: 10,
+//     company2: undefined,
+//     company3: 98,
+//   },
+//   {
+//     location: "France",
+//     company1: 23,
+//     company2: 12,
+//     company3: undefined,
+//   },
+//   {
+//     location: "United States of America",
+//     company1: 23,
+//     company2: undefined,
+//     company3: undefined,
+//   },
+//   {
+//     location: "Canada",
+//     company1: 32,
+//     company2: undefined,
+//     company3: 98,
+//   },
+//   {
+//     location: "Brazil",
+//     company1: 23,
+//     company2: 12,
+//     company3: undefined,
+//   },
+//   {
+//     location: "Israel",
+//     company1: 32,
+//     company2: undefined,
+//     company3: 12,
+//   },
+//   {
+//     location: "Russia",
+//     company1: undefined,
+//     company2: 5,
+//     company3: 34,
+//   },
+//   {
+//     location: "Australia",
+//     company1: 21,
+//     company2: 12,
+//     company3: undefined,
+//   },
+//   {
+//     location: "China",
+//     company1: undefined,
+//     company2: 12,
+//     company3: undefined,
+//   },
+//   {
+//     location: "Sudan",
+//     company1: 31,
+//     company2: undefined,
+//     company3: 8,
+//   },
+//   {
+//     location: "Algeria",
+//     company1: 54,
+//     company2: undefined,
+//     company3: undefined,
+//   },
+//   {
+//     location: "South Africa",
+//     company1: undefined,
+//     company2: 12,
+//     company3: 32,
+//   },
+// ];
+
+let countriesDataFromServer: Country[];
+
+backendAPIAxios.get('/countries')
+  .then((response: AxiosResponse<IGetCountriesDataResponse>) => {
+    if (!response.data.data) {
+      return alert(`Failed to add movie with error: ${response.data.message}`)
+    }
+
+    countriesDataFromServer = response.data.data;
+  })
+  .catch((e: AxiosError) => {
+    return alert(`Failed to run with error: ${e}`);
+  });
 
 const transformData = (
-  countries: Country[],
+  countriesDataFromServer: Country[],
   selection: "total" | "company1" | "company2" | "company3" = "total",
 ) => {
   // Get the total amount of countries
-  const countriesWithTotal = countries.map((country) => {
+  const countriesWithTotal = countriesDataFromServer.map((country) => {
     let { company1, company2, company3 } = country;
 
-    if (selection === "company1") {
-      company2 = 0;
-      company3 = 0;
-    } else if (selection === "company2") {
-      company1 = 0;
-      company3 = 0;
-    } else if (selection === "company3") {
-      company1 = 0;
-      company3 = 0;
+    switch (selection) {
+      case 'company1':
+        company2 = 0;
+        company3 = 0;
+      break;
+      case 'company2':
+        company1 = 0;
+        company3 = 0;
+      break;
+      case 'company3':
+        company1 = 0;
+        company2 = 0;
+      break;
     }
 
     if (typeof company1 === "undefined") {
@@ -96,7 +179,6 @@ const transformData = (
       ...country,
       opacity: (100 * country.total) / max,
     };
-    console.log(country.location, countriesData[countryName!].opacity);
   }
 
   return countriesData;
@@ -108,6 +190,7 @@ export interface State {
   color: string;
 }
 
+const countries: Country[] = [];
 export const initialState: State = {
   countriesData: transformData(countries),
   countryName: "",
@@ -122,17 +205,17 @@ export const mapReducer = produce(
         break;
       case "CHANGE_SELECTION":
         const countriesData = transformData(
-          countries,
+          countriesDataFromServer,
           action.payload.selection,
         );
 
         countriesState.countriesData = countriesData;
 
         const colors = {
-          total: "#000",
-          company1: "#4d194d",
-          company2: "#006466",
-          company3: "#780000",
+          total: "#773344",
+          company1: "#044389",
+          company2: "#CC5F00",
+          company3: "#566E3D",
         };
 
         countriesState.color = colors[action.payload.selection];
