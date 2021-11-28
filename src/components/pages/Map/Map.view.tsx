@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import MapContext from "../../../store/map-context";
+import { CHANGE_SELECTION } from "../../../store/actions/map";
 
 import { Country } from "../../../models/country";
 
@@ -24,41 +25,85 @@ interface Props {
 }
 
 const MapView: React.FC<Props> = (props: React.PropsWithChildren<Props>) => {
-  const { countriesState } = useContext(MapContext);
+  const { countriesState, dispatch } = useContext(MapContext);
 
-  console.log(countriesState?.countryName + " out");
+  const country = countriesState!.countriesData[countriesState!.countryName];
+
+  let total, company1, company2, company3, location;
+
+  if (country) {
+    ({ total, company1, company2, company3, location } = country);
+  }
 
   return (
     <div>
       <div className={classes["navWrapper"]}>
         <Stack direction="row" className={classes["btnWrapper"]}>
-          <Button type="button">All Companies</Button>
-          <Button type="button" className={classes["btnWrapper__company1"]}>
+          <Button
+            onClick={() =>
+              dispatch({
+                type: CHANGE_SELECTION,
+                payload: { selection: "total" },
+              })
+            }
+            type="button"
+          >
+            All Companies
+          </Button>
+          <Button
+            onClick={() =>
+              dispatch({
+                type: CHANGE_SELECTION,
+                payload: { selection: "company2" },
+              })
+            }
+            type="button"
+            className={classes["btnWrapper__company1"]}
+          >
             Company 1
           </Button>
-          <Button type="button" className={classes["btnWrapper__company2"]}>
+          <Button
+            onClick={() =>
+              dispatch({
+                type: CHANGE_SELECTION,
+                payload: { selection: "company3" },
+              })
+            }
+            type="button"
+            className={classes["btnWrapper__company2"]}
+          >
             Company 2
           </Button>
-          <Button type="button" className={classes["btnWrapper__company3"]}>
+          <Button
+            onClick={() =>
+              dispatch({
+                type: CHANGE_SELECTION,
+                payload: { selection: "company1" },
+              })
+            }
+            type="button"
+            className={classes["btnWrapper__company3"]}
+          >
             Company 3
           </Button>
         </Stack>
       </div>
       <MapChart />
-      {/* <ReactTooltip>{JSON.stringify(countriesState)}</ReactTooltip> */}
-      {/* {props.location && (<ReactTooltip>
-          {countriesState?.countryName ? props.location : 'No Data'}
+      {total && (
+        <ReactTooltip>
+          {total ? location : "No Data"}
           <br />
-          <div className={classes['blue']}>
-            {!props.company1 ? '' : 'Company1: ' + props.company1}
+          <div className={classes["blue"]}>
+            {!company1 ? "" : "Company 1: " + company1}
           </div>
-          <div className={classes['red']}>
-            {!props.company2 ? '' : 'Company2: ' + props.company2}
-          </div>  
-          <div className={classes['green']}>
-            {!props.company3 ? '' : 'Company2: ' + props.company3}
+          <div className={classes["red"]}>
+            {!company2 ? "" : "Company 2: " + company2}
           </div>
-        </ReactTooltip>)} */}
+          <div className={classes["green"]}>
+            {!company3 ? "" : "Company 3: " + company3}
+          </div>
+        </ReactTooltip>
+      )}
     </div>
   );
 };

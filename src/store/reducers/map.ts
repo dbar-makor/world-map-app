@@ -72,7 +72,13 @@ const transformData = (
       company3 = 0;
     }
 
-    return { ...country, total: company1 + company2 + company3 };
+    return {
+      ...country,
+      company1,
+      company2,
+      company3,
+      total: company1 + company2 + company3,
+    };
   });
 
   // Get the highest total amount of countries
@@ -90,6 +96,7 @@ const transformData = (
       ...country,
       opacity: (100 * country.total) / max,
     };
+    console.log(country.location, countriesData[countryName!].opacity);
   }
 
   return countriesData;
@@ -98,36 +105,38 @@ const transformData = (
 export interface State {
   countriesData: { [key: string]: Country };
   countryName: string;
+  color: string;
 }
 
 export const initialState: State = {
   countriesData: transformData(countries),
   countryName: "",
+  color: "",
 };
 
-// export const mapReducer = produce(
-//   (countriesState: State = initialState, action: actions.CompanyTypes) => {
-//     switch (action.type) {
-//       case "SELECT_COUNTRY":
-//         countriesState.countryName = action.payload.countryName;
-//         break;
-//       case "CHANGE_SELECTION":
-//         const countriesData = transformData(countries);
+export const mapReducer = produce(
+  (countriesState: State = initialState, action: actions.CompanyTypes) => {
+    switch (action.type) {
+      case "SELECT_COUNTRY":
+        countriesState.countryName = action.payload.countryName;
+        break;
+      case "CHANGE_SELECTION":
+        const countriesData = transformData(
+          countries,
+          action.payload.selection,
+        );
 
-//         countriesState.countriesData = countriesData;
-//         break;
-//     }
-//   },
-// );
+        countriesState.countriesData = countriesData;
 
-export const mapReducer = (
-  state: State = initialState,
-  action: actions.CompanyTypes,
-): State => {
-  switch (action.type) {
-    case actions.SELECT_COUNTRY:
-      return { ...state, countryName: action.payload.countryName };
-    default:
-      return state;
-  }
-};
+        const colors = {
+          total: "#000",
+          company1: "#4d194d",
+          company2: "#006466",
+          company3: "#780000",
+        };
+
+        countriesState.color = colors[action.payload.selection];
+        break;
+    }
+  },
+);

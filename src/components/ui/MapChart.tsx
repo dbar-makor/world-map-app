@@ -1,4 +1,4 @@
-import React, { memo, useReducer } from "react";
+import React, { memo, useContext, useReducer } from "react";
 import {
   ZoomableGroup,
   ComposableMap,
@@ -7,14 +7,15 @@ import {
 } from "react-simple-maps";
 
 import { SELECT_COUNTRY } from "../../store/actions/map";
-
-import { initialState, mapReducer } from "../../store/reducers/map";
+import MapContext from "../../store/map-context";
 
 const geoUrl =
   "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
 const MapChart = () => {
-  const [countriesState, dispatch] = useReducer(mapReducer, initialState);
+  const { countriesState, dispatch } = useContext(MapContext);
+
+  console.log(countriesState);
 
   return (
     <React.Fragment>
@@ -37,7 +38,6 @@ const MapChart = () => {
                         type: SELECT_COUNTRY,
                         payload: { countryName },
                       });
-                      console.log(countryName + " in");
                     }}
                     onMouseLeave={() => {
                       dispatch({
@@ -49,17 +49,20 @@ const MapChart = () => {
                       default: {
                         fill: countriesState!.countriesData[geo.properties.NAME]
                           ?.opacity
-                          ? "#C996CC"
+                          ? countriesState?.color
                           : "#b9b9bd",
                         outline: "none",
-                        opacity:
-                          Number(
-                            countriesState!.countriesData[geo.properties.NAME]
-                              ?.opacity,
-                          ) + "%",
+                        opacity: countriesState!.countriesData[
+                          geo.properties.NAME
+                        ]?.opacity
+                          ? Number(
+                              countriesState!.countriesData[geo.properties.NAME]
+                                ?.opacity,
+                            ) + "%"
+                          : undefined,
                       },
                       hover: {
-                        fill: "#C996CC",
+                        fill: countriesState?.color,
                         outline: "none",
                       },
                     }}
